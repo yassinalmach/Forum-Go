@@ -10,7 +10,7 @@ import (
 
 var DB *sql.DB
 
-func SetupDatabase() (error) {
+func SetupDatabase() error {
 	// create database, open creates a sql.DB object that acts as a connection pool.
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
@@ -34,6 +34,5 @@ func SetupDatabase() (error) {
 	}
 
 	DB = db
-
 	return nil
 }
