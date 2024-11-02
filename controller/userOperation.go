@@ -36,20 +36,21 @@ func AddUser(email, username, password string) error {
 }
 
 // check if username exists and password is correct
-func GetUser(username, password string) error {
+func GetUser(username, password string) (int, error) {
+	var id int
 	var hashedPassword string
 	// check if username already exist
-	err := database.DB.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&hashedPassword)
+	err := database.DB.QueryRow("SELECT id, password FROM users WHERE username = ?", username).Scan(&id, &hashedPassword)
 	if err == sql.ErrNoRows {
-		return fmt.Errorf("user not found: %v", err)
+		return 0, fmt.Errorf("user not found: %v", err)
 	} else if err != nil {
-		return fmt.Errorf("error getting user: %v", err)
+		return 0, fmt.Errorf("error getting user: %v", err)
 	}
 
 	// compare password
 	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password)); err != nil {
-		return fmt.Errorf("incorrect password: %v", err)
+		return 0, fmt.Errorf("incorrect password: %v", err)
 	}
 
-	return nil
+	return id, nil
 }

@@ -43,12 +43,13 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := controller.GetUser(user.Username, user.Password); err != nil {
+	id, err := controller.GetUser(user.Username, user.Password)
+	if err != nil {
 		responseJSON(w, 400, resp{Err: err.Error()})
 		return
 	}
 
-	if err := controller.NewSession(user.Id, w); err != nil {
+	if err := controller.NewSession(id, w); err != nil {
 		responseJSON(w, 500, resp{Err: err.Error()})
 		return
 	}
