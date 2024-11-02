@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// add/insert user information to the database(table 'user')
 func AddUser(email, username, password string) error {
 	// check if data provided exists
 	if email == "" || username == "" || password == "" {
@@ -34,6 +35,7 @@ func AddUser(email, username, password string) error {
 	return nil
 }
 
+// check if username exists and password is correct
 func GetUser(username, password string) error {
 	var hashedPassword string
 	// check if username already exist
