@@ -49,7 +49,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := controller.NewSession(id, w); err != nil {
+	if err := controller.AddSession(id, w); err != nil {
 		responseJSON(w, 500, resp{Err: err.Error()})
 		return
 	}

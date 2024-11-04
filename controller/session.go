@@ -11,7 +11,7 @@ import (
 
 // this func creates a new session with an expiration time, to a specific user
 // and set a session cookie
-func NewSession(userId int, w http.ResponseWriter) error {
+func AddSession(userId int, w http.ResponseWriter) error {
 	// Delete any existing sessions for this user
 	if _, err := database.DB.Exec("DELETE FROM sessions WHERE user_id = ?", userId); err != nil {
 		return fmt.Errorf("error deleting session: %v", err)
@@ -40,4 +40,14 @@ func NewSession(userId int, w http.ResponseWriter) error {
 		HttpOnly: true,
 	})
 	return nil
+}
+
+// Get user ID from session
+func GetSession(sessionID string) (int, error) {
+	var userID int
+	if err := database.DB.QueryRow("SELECT user_id FROM sessions WHERE id = ? AND expires_at > ?",
+		sessionID, time.Now()).Scan(&userID); err != nil {
+		return 0, fmt.Errorf("unauthorized: getting session id failed: %v", err)
+	}
+	return userID, nil
 }
