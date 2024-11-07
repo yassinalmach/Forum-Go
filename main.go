@@ -16,7 +16,7 @@ func main() {
 	defer database.DB.Close()
 
 	mux := http.NewServeMux()
-	initializeRoutes(mux)
+	setupRoutes(mux)
 
 	fmt.Println("server running on: http://localhost:2000")
 	if err := http.ListenAndServe(":2000", mux); err != nil {
@@ -24,7 +24,8 @@ func main() {
 	}
 }
 
-func initializeRoutes(mux *http.ServeMux) {
+func setupRoutes(mux *http.ServeMux) {
+	// login routes
 	mux.HandleFunc("POST /api/register", api.RegisterUser)
 	mux.HandleFunc("POST /api/login", api.LoginUser)
 }

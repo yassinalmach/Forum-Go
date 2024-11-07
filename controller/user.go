@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"fmt"
 	"forum/database"
 
@@ -17,8 +16,7 @@ func AddUser(email, username, password string) error {
 
 	// check if user already registred
 	var isExist bool
-	if err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ? OR username = ?)",
-		email, username).Scan(&isExist); err != nil {
+	if err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ? OR username = ?)", email, username).Scan(&isExist); err != nil {
 		return err
 	} else if isExist {
 		return fmt.Errorf("user already exist")
@@ -41,10 +39,8 @@ func GetUser(username, password string) (int, error) {
 	var hashedPassword string
 	// check if username already exist
 	err := database.DB.QueryRow("SELECT id, password FROM users WHERE username = ?", username).Scan(&id, &hashedPassword)
-	if err == sql.ErrNoRows {
+	if err != nil {
 		return 0, fmt.Errorf("user not found: %v", err)
-	} else if err != nil {
-		return 0, fmt.Errorf("error getting user: %v", err)
 	}
 
 	// compare password
